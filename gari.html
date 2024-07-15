@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ガリガリ君トラッカー</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            font-size: 16px;
+            margin: 5px;
+            padding: 10px 20px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ガリガリ君トラッカー</h1>
+    <div>
+        <button onclick="addResult(true)">○ 当たり</button>
+        <button onclick="addResult(false)">× はずれ</button>
+        <button onclick="confirmReset()">リセット</button>
+    </div>
+    <div id="results"></div>
+
+    <script>
+        let results = [];
+
+        function addResult(isWin) {
+            const now = new Date();
+            results.push({
+                date: now,
+                isWin: isWin
+            });
+            updateResults();
+        }
+
+        function updateResults() {
+            const resultsDiv = document.getElementById('results');
+            const totalCount = results.length;
+            const winCount = results.filter(r => r.isWin).length;
+            const winRate = totalCount > 0 ? (winCount / totalCount * 100).toFixed(2) : 0;
+            const stomachUpsetProb = (totalCount * 0.05).toFixed(2);
+
+            let html = `<h2>結果</h2>`;
+            html += `<p>食べた本数: ${totalCount}</p>`;
+            html += `<p>当たり率: ${winRate}%</p>`;
+            html += `<p>おなかを壊す確率: ${stomachUpsetProb}%</p>`;
+            html += `<h3>履歴</h3>`;
+            html += `<ul>`;
+            results.forEach(r => {
+                html += `<li>${r.date.toLocaleString()} - ${r.isWin ? '当たり' : 'はずれ'}</li>`;
+            });
+            html += `</ul>`;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function confirmReset() {
+            if (confirm("本当にリセットしますか？鈴木あおとはそれでいいのか？")) {
+                results = [];
+                updateResults();
+            }
+        }
+    </script>
+</body>
+</html>
