@@ -33,6 +33,21 @@
     <script>
         let results = [];
 
+        // ページロード時に保存されたデータを読み込む
+        function loadResults() {
+            const savedResults = localStorage.getItem('garigarikun_results');
+            if (savedResults) {
+                results = JSON.parse(savedResults);
+                results.forEach(r => r.date = new Date(r.date));
+                updateResults();
+            }
+        }
+
+        // 結果を保存する
+        function saveResults() {
+            localStorage.setItem('garigarikun_results', JSON.stringify(results));
+        }
+
         function addResult(isWin) {
             const now = new Date();
             results.push({
@@ -40,6 +55,7 @@
                 isWin: isWin
             });
             updateResults();
+            saveResults();
         }
 
         function updateResults() {
@@ -67,8 +83,12 @@
             if (confirm("本当にリセットしますか？鈴木あおとはそれでいいのか？")) {
                 results = [];
                 updateResults();
+                saveResults();
             }
         }
+
+        // ページロード時に結果を読み込む
+        loadResults();
     </script>
 </body>
 </html>
